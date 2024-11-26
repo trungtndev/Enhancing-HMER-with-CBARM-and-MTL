@@ -197,6 +197,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
             self.train_dataset,
             shuffle=True,
             num_workers=self.num_workers,
+            pin_memory=True,
             collate_fn=collate_fn,
         )
 
@@ -205,6 +206,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
             self.val_dataset,
             shuffle=False,
             num_workers=self.num_workers,
+            pin_memory=True,
             collate_fn=collate_fn,
         )
 
