@@ -90,6 +90,7 @@ def to_tgt_output(
     direction: str,
     device: torch.device,
     pad_to_len: Optional[int] = None,
+    is_implicit=False
 ) -> Tuple[LongTensor, LongTensor]:
     """Generate tgt and out for indices
 
@@ -110,6 +111,33 @@ def to_tgt_output(
 
     if isinstance(tokens[0], list):
         tokens = [torch.tensor(t, dtype=torch.long) for t in tokens]
+
+    if is_implicit:
+        filtered_tokens = []
+        for token in tokens:
+            mask = ((token != vocab.word2idx['{']) &
+                    (token != vocab.word2idx['}']) &
+                    (token != vocab.word2idx['^']) &
+                    (token != vocab.word2idx['_']) &
+                    (token != vocab.word2idx[r'\frac']) &
+                    (token != vocab.word2idx[r'\sqrt']) &
+                    (token != vocab.word2idx['[']) &
+                    (token != vocab.word2idx[']']) &
+
+                    (token != vocab.word2idx['+']) &
+                    (token != vocab.word2idx['=']) &
+                    (token != vocab.word2idx['-']) &
+                    (token != vocab.word2idx[r'\times']) &
+                    (token != vocab.word2idx[r'\cdot']) &
+                    (token != vocab.word2idx[r'\div']) &
+                    (token != vocab.word2idx[r'\geq']) &
+                    (token != vocab.word2idx['>']) &
+                    (token != vocab.word2idx['<'])
+
+                    )
+            token[mask] = 3
+            filtered_tokens.append(token)
+        tokens = filtered_tokens
 
     if direction == "l2r":
         tokens = tokens
@@ -151,7 +179,8 @@ def to_tgt_output(
 
 
 def to_bi_tgt_out(
-    tokens: List[List[int]], device: torch.device
+    tokens: List[List[int]], device: torch.device,
+is_implicit=False
 ) -> Tuple[LongTensor, LongTensor]:
     """Generate bidirection tgt and out
 
@@ -166,8 +195,10 @@ def to_bi_tgt_out(
     Tuple[LongTensor, LongTensor]
         tgt, out: [2b, l], [2b, l]
     """
-    l2r_tgt, l2r_out = to_tgt_output(tokens, "l2r", device)
-    r2l_tgt, r2l_out = to_tgt_output(tokens, "r2l", device)
+    l2r_tgt, l2r_out = to_tgt_output(tokens, "l2r", device,
+                                     is_implicit=is_implicit)
+    r2l_tgt, r2l_out = to_tgt_output(tokens, "r2l", device,
+                                     is_implicit=is_implicit)
 
     tgt = torch.cat((l2r_tgt, r2l_tgt), dim=0)
     out = torch.cat((l2r_out, r2l_out), dim=0)

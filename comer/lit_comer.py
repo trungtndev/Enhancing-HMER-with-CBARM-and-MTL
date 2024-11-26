@@ -77,18 +77,43 @@ class LitCoMER(pl.LightningModule):
 
     def training_step(self, batch: Batch, _):
         tgt, out = to_bi_tgt_out(batch.indices, self.device)
-        out_hat = self(batch.imgs, batch.mask, tgt)
+        imp_tgt, imp_out = to_bi_tgt_out(batch.indices, self.device, is_implicit=True)
 
-        loss = ce_loss(out_hat, out)
+        out_hat, imp_hat = self(batch.imgs, batch.mask, tgt)
+
+        out_loss = ce_loss(out_hat, out)
+        imp_loss = ce_loss(imp_hat, imp_out)
+        loss = out_loss + imp_loss
+        self.log("train_out_loss", out_loss, on_step=False, on_epoch=True, sync_dist=True)
+        self.log("train_imp_loss", imp_loss, on_step=False, on_epoch=True, sync_dist=True)
         self.log("train_loss", loss, on_step=False, on_epoch=True, sync_dist=True)
 
         return loss
 
     def validation_step(self, batch: Batch, _):
         tgt, out = to_bi_tgt_out(batch.indices, self.device)
-        out_hat = self(batch.imgs, batch.mask, tgt)
+        imp_tgt, imp_out = to_bi_tgt_out(batch.indices, self.device, is_implicit=True)
+        out_hat, imp_hat = self(batch.imgs, batch.mask, tgt)
 
-        loss = ce_loss(out_hat, out)
+        out_loss = ce_loss(out_hat, out)
+        imp_loss = ce_loss(imp_hat, imp_out)
+        loss = out_loss + imp_loss
+        self.log(
+            "val_out_loss",
+            out_loss,
+            on_step=False,
+            on_epoch=True,
+            prog_bar=True,
+            sync_dist=True,
+        )
+        self.log(
+            "val_imp_loss",
+            imp_loss,
+            on_step=False,
+            on_epoch=True,
+            prog_bar=True,
+            sync_dist=True,
+        )
         self.log(
             "val_loss",
             loss,

@@ -13,12 +13,16 @@ class CROHMEVocab:
     PAD_IDX = 0
     SOS_IDX = 1
     EOS_IDX = 2
+    SPACE_IDX = 3
+
 
     def __init__(self, dict_path: str = default_dict()) -> None:
         self.word2idx = dict()
         self.word2idx["<pad>"] = self.PAD_IDX
         self.word2idx["<sos>"] = self.SOS_IDX
         self.word2idx["<eos>"] = self.EOS_IDX
+        self.word2idx["<space>"] = self.SPACE_IDX
+
 
         with open(dict_path, "r") as f:
             for line in f.readlines():
