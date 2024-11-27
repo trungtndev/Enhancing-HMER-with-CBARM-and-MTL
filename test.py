@@ -36,7 +36,7 @@ def main(version: str, test_year: str):
     fnames = os.listdir(ckp_folder)
     print(fnames)
     assert len(fnames) == 1
-    ckp_path = os.path.join(ckp_folder, fnames[1])
+    ckp_path = os.path.join(ckp_folder, fnames[0])
     print(f"Test with fname: {fnames[0]}")
 
     trainer = Trainer(logger=False, gpus=1)
