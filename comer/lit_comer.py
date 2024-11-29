@@ -83,7 +83,7 @@ class LitCoMER(pl.LightningModule):
 
         out_loss = ce_loss(out_hat, out)
         imp_loss = ce_loss(imp_hat, imp_out)
-        loss = out_loss + imp_loss * 0.5
+        loss = out_loss + imp_loss
         self.log("train_out_loss", out_loss, on_step=False, on_epoch=True, sync_dist=True)
         self.log("train_imp_loss", imp_loss, on_step=False, on_epoch=True, sync_dist=True)
         self.log("train_loss", loss, on_step=False, on_epoch=True, sync_dist=True)
@@ -97,7 +97,7 @@ class LitCoMER(pl.LightningModule):
 
         out_loss = ce_loss(out_hat, out)
         imp_loss = ce_loss(imp_hat, imp_out)
-        loss = out_loss + imp_loss * 0.5
+        loss = out_loss + imp_loss
 
         self.log("val_out_loss", out_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True, )
         self.log("val_imp_loss", imp_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True, )
