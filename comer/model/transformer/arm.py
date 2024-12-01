@@ -93,6 +93,7 @@ class AttentionRefinementModule(nn.Module):
 
         cov = self.conv(attns)
         cov = self.act(cov)
+        cov = self.cbam(cov)
 
         cov = cov.masked_fill(mask, 0.0)
         cov = self.proj(cov)
