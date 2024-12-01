@@ -13,11 +13,11 @@ class ChannelAttention(nn.Module):
 
         self.excitation = nn.Sequential(
             nn.Conv2d(in_channels=channels,
-                      out_channels=channels * ratio,
+                      out_channels=channels // ratio,
                       kernel_size=1,
                       bias=True),
             nn.ReLU(),
-            nn.Conv2d(in_channels=channels * ratio,
+            nn.Conv2d(in_channels=channels // ratio,
                       out_channels=channels,
                       kernel_size=1,
                       bias=True),
