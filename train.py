@@ -61,7 +61,13 @@ def train(config):
                                                        monitor=config.trainer.callbacks[1].init_args.monitor,
                                                        mode=config.trainer.callbacks[1].init_args.mode,
                                                        filename=config.trainer.callbacks[1].init_args.filename)
-
+    lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
+        dirpath="checkpoint",
+        filename="lasted",
+        every_n_epochs=1,
+        save_on_train_epoch_end=True,
+        monitor=None,
+    )
     trainer = pl.Trainer(
         gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
@@ -71,7 +77,7 @@ def train(config):
 
         plugins=DDPPlugin(find_unused_parameters=False),
         logger=logger,
-        callbacks=[lr_callback, checkpoint_callback],
+        callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
 
     trainer.fit(model_module, data_module)
