@@ -124,6 +124,12 @@ def to_tgt_output(
                     (token != vocab.word2idx['[']) &
                     (token != vocab.word2idx[']']) &
 
+                    (token != vocab.word2idx['\}']) &
+                    (token != vocab.word2idx['\{']) &
+                    (token != vocab.word2idx['(']) &
+                    (token != vocab.word2idx[')']) &
+                    (token != vocab.word2idx['|']) &
+
                     (token != vocab.word2idx['+']) &
                     (token != vocab.word2idx['=']) &
                     (token != vocab.word2idx['-']) &
