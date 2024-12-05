@@ -25,6 +25,8 @@ def train(config):
         dc=config.model.dc,
         cross_coverage=config.model.cross_coverage,
         self_coverage=config.model.self_coverage,
+        lambda_1=config.model.lambda_1,
+        lambda_2=config.model.lambda_2,
         # beam search
         beam_size=config.model.beam_size,
         max_len=config.model.max_len,
