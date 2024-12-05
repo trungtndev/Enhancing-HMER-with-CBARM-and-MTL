@@ -37,8 +37,8 @@ model:
   dc: 32
   cross_coverage: true
   self_coverage: true
-  lamda1: 1
-  lamda2: 1
+  lamda_1: 1
+  lamda_2: 1
   # beam search
   beam_size: 10
   max_len: 200
