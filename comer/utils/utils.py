@@ -138,6 +138,7 @@ def to_tgt_output(
                     (token != vocab.word2idx[r'\div']) &
                     (token != vocab.word2idx[r'\geq']) &
                     (token != vocab.word2idx['>']) &
+                    (token != vocab.word2idx[r'\neq']) &
                     (token != vocab.word2idx['<'])
 
                     )
