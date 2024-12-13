@@ -130,10 +130,10 @@ def to_tgt_output(
                     # (token != vocab.word2idx[')']) &
                     # (token != vocab.word2idx['|']) &
 
-                    # (token != vocab.word2idx['\int']) &
-                    # (token != vocab.word2idx['\sum']) &
-                    # (token != vocab.word2idx['\limits']) &
-                    # (token != vocab.word2idx['\lim']) &
+                    (token != vocab.word2idx['\int']) &
+                    (token != vocab.word2idx['\sum']) &
+                    (token != vocab.word2idx['\limits']) &
+                    (token != vocab.word2idx['\lim']) &
 
                     (token != vocab.word2idx['+']) &
                     (token != vocab.word2idx['=']) &
