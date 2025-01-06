@@ -72,7 +72,7 @@ class Decoder(DecodeModel):
             cross_coverage=cross_coverage,
             self_coverage=self_coverage,
         )
-
+        self.proj_imp = nn.Linear(d_model, vocab_size)
         self.proj = nn.Linear(d_model, vocab_size)
 
     def _build_attention_mask(self, length):
@@ -126,13 +126,14 @@ class Decoder(DecodeModel):
         )
 
         out = rearrange(out, "l b d -> b l d")
-        out = self.proj(out)
+        exp_out = self.proj(out)
+        imp_out = self.proj_imp(out)
 
-        return out
+        return exp_out, imp_out
 
     def transform(
         self, src: List[FloatTensor], src_mask: List[LongTensor], input_ids: LongTensor
     ) -> FloatTensor:
         assert len(src) == 1 and len(src_mask) == 1
-        word_out = self(src[0], src_mask[0], input_ids)
-        return word_out
+        exp_out, imp_out = self(src[0], src_mask[0], input_ids)
+        return exp_out

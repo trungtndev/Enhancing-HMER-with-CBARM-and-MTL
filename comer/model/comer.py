@@ -63,9 +63,9 @@ class CoMER(pl.LightningModule):
         feature = torch.cat((feature, feature), dim=0)  # [2b, t, d]
         mask = torch.cat((mask, mask), dim=0)
 
-        out = self.decoder(feature, mask, tgt)
+        exp_out, imp_out = self.decoder(feature, mask, tgt)
 
-        return out
+        return exp_out, imp_out
 
     def beam_search(
         self,
@@ -97,3 +97,24 @@ class CoMER(pl.LightningModule):
         return self.decoder.beam_search(
             [feature], [mask], beam_size, max_len, alpha, early_stopping, temperature
         )
+
+if __name__ == "__main__":
+    img = torch.randn(4, 1, 256, 256)
+    img_mask = torch.ones(4, 256, 256, dtype=torch.long)
+
+    # Create a sample target tensor
+    tgt = torch.randint(0, 50, size=(8, 30))
+    model = CoMER(
+        d_model=256,
+        growth_rate=32,
+        num_layers=6,
+        nhead=8,
+        num_decoder_layers=6,
+        dim_feedforward=2048,
+        dropout=0.1,
+        dc=32,
+        cross_coverage=True,
+        self_coverage=True,
+    )
+    output = model(img, img_mask, tgt)
+    print(output)

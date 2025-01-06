@@ -13,28 +13,30 @@ from comer.utils.utils import (ExpRateRecorder, Hypothesis, ce_loss,
 
 class LitCoMER(pl.LightningModule):
     def __init__(
-        self,
-        d_model: int,
-        # encoder
-        growth_rate: int,
-        num_layers: int,
-        # decoder
-        nhead: int,
-        num_decoder_layers: int,
-        dim_feedforward: int,
-        dropout: float,
-        dc: int,
-        cross_coverage: bool,
-        self_coverage: bool,
-        # beam search
-        beam_size: int,
-        max_len: int,
-        alpha: float,
-        early_stopping: bool,
-        temperature: float,
-        # training
-        learning_rate: float,
-        patience: int,
+            self,
+            d_model: int,
+            # encoder
+            growth_rate: int,
+            num_layers: int,
+            # decoder
+            nhead: int,
+            num_decoder_layers: int,
+            dim_feedforward: int,
+            dropout: float,
+            dc: int,
+            cross_coverage: bool,
+            self_coverage: bool,
+            lamda_1: float,
+            lamda_2: float,
+            # beam search
+            beam_size: int,
+            max_len: int,
+            alpha: float,
+            early_stopping: bool,
+            temperature: float,
+            # training
+            learning_rate: float,
+            patience: int,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -55,7 +57,7 @@ class LitCoMER(pl.LightningModule):
         self.exprate_recorder = ExpRateRecorder()
 
     def forward(
-        self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor
+            self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor
     ) -> FloatTensor:
         """run img and bi-tgt
 
@@ -77,26 +79,31 @@ class LitCoMER(pl.LightningModule):
 
     def training_step(self, batch: Batch, _):
         tgt, out = to_bi_tgt_out(batch.indices, self.device)
-        out_hat = self(batch.imgs, batch.mask, tgt)
+        imp_tgt, imp_out = to_bi_tgt_out(batch.indices, self.device, is_implicit=True)
 
-        loss = ce_loss(out_hat, out)
+        out_hat, imp_hat = self(batch.imgs, batch.mask, tgt)
+
+        out_loss = ce_loss(out_hat, out)
+        imp_loss = ce_loss(imp_hat, imp_out)
+        loss = out_loss * self.hparams.lamda_1 + imp_loss * self.hparams.lamda_2
+        self.log("train_out_loss", out_loss, on_step=False, on_epoch=True, sync_dist=True)
+        self.log("train_imp_loss", imp_loss, on_step=False, on_epoch=True, sync_dist=True)
         self.log("train_loss", loss, on_step=False, on_epoch=True, sync_dist=True)
 
         return loss
 
     def validation_step(self, batch: Batch, _):
         tgt, out = to_bi_tgt_out(batch.indices, self.device)
-        out_hat = self(batch.imgs, batch.mask, tgt)
+        imp_tgt, imp_out = to_bi_tgt_out(batch.indices, self.device, is_implicit=True)
+        out_hat, imp_hat = self(batch.imgs, batch.mask, tgt)
 
-        loss = ce_loss(out_hat, out)
-        self.log(
-            "val_loss",
-            loss,
-            on_step=False,
-            on_epoch=True,
-            prog_bar=True,
-            sync_dist=True,
-        )
+        out_loss = ce_loss(out_hat, out)
+        imp_loss = ce_loss(imp_hat, imp_out)
+        loss = out_loss * self.hparams.lamda_1 + imp_loss * self.hparams.lamda_2
+
+        self.log("val_out_loss", out_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True, )
+        self.log("val_imp_loss", imp_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True, )
+        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True, )
 
         hyps = self.approximate_joint_search(batch.imgs, batch.mask)
 
@@ -126,7 +133,7 @@ class LitCoMER(pl.LightningModule):
                         f.write(content)
 
     def approximate_joint_search(
-        self, img: FloatTensor, mask: LongTensor
+            self, img: FloatTensor, mask: LongTensor
     ) -> List[Hypothesis]:
         return self.comer_model.beam_search(img, mask, **self.hparams)
 

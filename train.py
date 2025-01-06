@@ -25,6 +25,8 @@ def train(config):
         dc=config.model.dc,
         cross_coverage=config.model.cross_coverage,
         self_coverage=config.model.self_coverage,
+        lamda_1=config.model.lamda_1,
+        lamda_2=config.model.lamda_2,
         # beam search
         beam_size=config.model.beam_size,
         max_len=config.model.max_len,
@@ -61,7 +63,13 @@ def train(config):
                                                        monitor=config.trainer.callbacks[1].init_args.monitor,
                                                        mode=config.trainer.callbacks[1].init_args.mode,
                                                        filename=config.trainer.callbacks[1].init_args.filename)
-
+    # lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
+    #     dirpath="checkpoint",
+    #     filename="lasted",
+    #     every_n_epochs=1,
+    #     save_on_train_epoch_end=True,
+    #     monitor=None,
+    # )
     trainer = pl.Trainer(
         gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,

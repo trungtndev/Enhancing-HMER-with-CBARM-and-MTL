@@ -14,7 +14,7 @@ trainer:
   # gpus: 1
   gpus: 2 #, 1, 2, 3
   accelerator: ddp
-  check_val_every_n_epoch: 2
+  check_val_every_n_epoch: 4
   max_epochs: 300
   deterministic: true
 
@@ -37,6 +37,8 @@ model:
   dc: 32
   cross_coverage: true
   self_coverage: true
+  lamda_1: 1
+  lamda_2: 1
   # beam search
   beam_size: 10
   max_len: 200
