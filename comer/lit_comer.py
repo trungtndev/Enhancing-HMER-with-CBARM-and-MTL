@@ -26,8 +26,8 @@ class LitCoMER(pl.LightningModule):
             dc: int,
             cross_coverage: bool,
             self_coverage: bool,
-            lamda_1: float,
-            lamda_2: float,
+            lambda_1: float,
+            lambda_2: float,
             # beam search
             beam_size: int,
             max_len: int,
@@ -85,7 +85,7 @@ class LitCoMER(pl.LightningModule):
 
         out_loss = ce_loss(out_hat, out)
         imp_loss = ce_loss(imp_hat, imp_out)
-        loss = out_loss * self.hparams.lamda_1 + imp_loss * self.hparams.lamda_2
+        loss = out_loss * self.hparams.lambda_1 + imp_loss * self.hparams.lambda_2
         self.log("train_out_loss", out_loss, on_step=False, on_epoch=True, sync_dist=True)
         self.log("train_imp_loss", imp_loss, on_step=False, on_epoch=True, sync_dist=True)
         self.log("train_loss", loss, on_step=False, on_epoch=True, sync_dist=True)
@@ -99,7 +99,7 @@ class LitCoMER(pl.LightningModule):
 
         out_loss = ce_loss(out_hat, out)
         imp_loss = ce_loss(imp_hat, imp_out)
-        loss = out_loss * self.hparams.lamda_1 + imp_loss * self.hparams.lamda_2
+        loss = out_loss * self.hparams.lambda_1 + imp_loss * self.hparams.lambda_2
 
         self.log("val_out_loss", out_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True, )
         self.log("val_imp_loss", imp_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True, )
