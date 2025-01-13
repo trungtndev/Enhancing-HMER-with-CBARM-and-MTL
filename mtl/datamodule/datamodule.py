@@ -6,7 +6,7 @@ from zipfile import ZipFile
 import numpy as np
 import pytorch_lightning as pl
 import torch
-from comer.datamodule.dataset import CROHMEDataset
+from mtl.datamodule.dataset import CROHMEDataset
 from PIL import Image
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader

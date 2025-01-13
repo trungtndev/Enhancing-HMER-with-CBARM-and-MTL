@@ -2,8 +2,8 @@ import argparse
 import os
 import wandb
 from pytorch_lightning.loggers import WandbLogger as Logger
-from comer.datamodule import CROHMEDatamodule
-from comer.lit_comer import LitCoMER
+from mtl.datamodule import CROHMEDatamodule
+from mtl.lit_mtl import LitMTL
 from sconf import Config
 import pytorch_lightning as pl
 from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
@@ -11,7 +11,7 @@ from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 def train(config):
     pl.seed_everything(config.seed_everything, workers=True)
 
-    model_module = LitCoMER(
+    model_module = LitMTL(
         d_model=config.model.d_model,
         # encoder
         growth_rate=config.model.growth_rate,

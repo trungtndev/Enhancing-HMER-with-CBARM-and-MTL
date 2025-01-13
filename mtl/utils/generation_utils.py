@@ -4,8 +4,8 @@ from typing import List, Tuple
 import pytorch_lightning as pl
 import torch
 import torch.nn.functional as F
-from comer.datamodule import vocab, vocab_size
-from comer.utils.utils import Hypothesis, ce_loss, to_tgt_output
+from mtl.datamodule import vocab, vocab_size
+from mtl.utils.utils import Hypothesis, ce_loss, to_tgt_output
 from einops import rearrange
 from einops.einops import repeat
 from torch import FloatTensor, LongTensor

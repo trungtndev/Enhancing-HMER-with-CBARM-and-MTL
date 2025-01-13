@@ -1,8 +1,8 @@
 import os
 
 import typer
-from comer.datamodule import CROHMEDatamodule
-from comer.lit_comer import LitCoMER
+from mtl.datamodule import CROHMEDatamodule
+from mtl.lit_mtl import LitMTL
 from pytorch_lightning import Trainer, seed_everything
 import zipfile
 
@@ -43,7 +43,7 @@ def main(version: str, test_year: str):
 
     dm = CROHMEDatamodule(test_year=test_year, eval_batch_size=4)
 
-    model = LitCoMER.load_from_checkpoint(ckp_path)
+    model = LitMTL.load_from_checkpoint(ckp_path)
 
     trainer.test(model, datamodule=dm)
     caption = {}
