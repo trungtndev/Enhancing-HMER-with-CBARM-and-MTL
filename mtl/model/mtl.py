@@ -10,7 +10,7 @@ from .decoder import Decoder
 from .encoder import Encoder
 
 
-class CoMER(pl.LightningModule):
+class MTL(pl.LightningModule):
     def __init__(
         self,
         d_model: int,
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
     # Create a sample target tensor
     tgt = torch.randint(0, 50, size=(8, 30))
-    model = CoMER(
+    model = MTL(
         d_model=256,
         growth_rate=32,
         num_layers=6,

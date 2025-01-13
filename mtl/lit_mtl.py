@@ -6,7 +6,7 @@ import torch.optim as optim
 from torch import FloatTensor, LongTensor
 
 from mtl.datamodule import Batch, vocab
-from mtl.model.comer import CoMER
+from mtl.model.mtl import MTL
 from mtl.utils.utils import (ExpRateRecorder, Hypothesis, ce_loss,
                              to_bi_tgt_out)
 
@@ -41,7 +41,7 @@ class LitMTL(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
 
-        self.comer_model = CoMER(
+        self.comer_model = MTL(
             d_model=d_model,
             growth_rate=growth_rate,
             num_layers=num_layers,
