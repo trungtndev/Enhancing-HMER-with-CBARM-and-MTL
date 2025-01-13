@@ -130,10 +130,10 @@ def to_tgt_output(
                     # (token != vocab.word2idx[')']) &
                     # (token != vocab.word2idx['|']) &
 
-                    (token != vocab.word2idx['\int']) &
-                    (token != vocab.word2idx['\sum']) &
-                    (token != vocab.word2idx['\limits']) &
-                    (token != vocab.word2idx['\lim']) &
+                    # (token != vocab.word2idx['\int']) &
+                    # (token != vocab.word2idx['\sum']) &
+                    # (token != vocab.word2idx['\limits']) &
+                    # (token != vocab.word2idx['\lim']) &
 
                     (token != vocab.word2idx['+']) &
                     (token != vocab.word2idx['=']) &
@@ -142,11 +142,10 @@ def to_tgt_output(
                     (token != vocab.word2idx[r'\cdot']) &
                     (token != vocab.word2idx[r'\div']) &
                     (token != vocab.word2idx[r'\geq']) &
+                    (token != vocab.word2idx[r'\leq']) &
                     (token != vocab.word2idx['>']) &
                     (token != vocab.word2idx['<']) &
-                    (token != vocab.word2idx[r'\neq']) &
-                    (token != vocab.word2idx['\pm'])
-
+                    (token != vocab.word2idx[r'\neq'])
                     )
             token[mask] = 3
             filtered_tokens.append(token)
