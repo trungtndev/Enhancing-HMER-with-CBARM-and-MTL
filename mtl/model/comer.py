@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 import torch
 from torch import FloatTensor, LongTensor
 
-from comer.utils.utils import Hypothesis
+from mtl.utils.utils import Hypothesis
 
 from .decoder import Decoder
 from .encoder import Encoder

@@ -19,8 +19,8 @@ trainer:
   deterministic: true
 
 wandb:
-  name: "run_again_v1"
-  project: "comer"
+  name: "..."
+  project: "mtl"
   log_model: "all"
 
 
