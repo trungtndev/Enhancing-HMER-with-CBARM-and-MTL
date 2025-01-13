@@ -5,9 +5,9 @@ import pkg_resources
 from setuptools import find_packages, setup
 
 setup(
-    name="mtl",
+    name="MTL",
     version="0.0.1",
-    description="CoMER: Modeling Coverage for Transformer-based Handwritten Mathematical Expression Recognition",
+    description="Towards efficient recognition of handwritten mathematical expressions with multi-task learning",
     author="",
     author_email="",
     # REPLACE WITH YOUR OWN GITHUB PROJECT LINK
