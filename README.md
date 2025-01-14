@@ -69,7 +69,7 @@ gpus: 1 # number of GPU
 
 ## Evaluation
 ```bash
-!python test.py 0 2016 # 2014, 2016, 2019
+python test.py 0 2016 # 2014, 2016, 2019
 ```
 
 
