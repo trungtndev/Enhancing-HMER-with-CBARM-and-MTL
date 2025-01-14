@@ -20,22 +20,26 @@
 > Index Terms: Handwritten mathematical expression recognition, Transformer, Attention mechanism, Multi-task learning.
 ## Table of Contents
 
-- [Abstract](#Abstract)
-- [Usage](#Usage)
+- [**Abstract**](#Abstract)
+- [**Usage**](#Usage)
   - [Dataset](#dataset)
   - [Clone this repository](#clone-this-repository)
   - [Create Conda Enviroment and Install Requirement](#create-conda-enviroment-and-install-requirement)
-- [Citation](#citation)
-- [Contact](#Contact)
+- [**References**](#references)
+- [**Citation**](#citation)
+- [**Contact**](#Contact)
+
 ## Usage
 ### Dataset
 
 ### Clone this repository
-```python
+```
 https://github.com/trungtndev/HMER-MTL
 ```
 
 ### Create Conda Enviroment and Install Requirement
+
+## References
 
 ## Citation
 If you use this code or part of it, please cite the following papers:
@@ -47,8 +51,8 @@ For any information, please contact the main author:
 
 Thanh Trung Nguyen at FPT University, Vietnam
 
-Email: <link>trunglh113@gmail.com </link><br>
-ORCID: <link>https://orcid.org/0009-0004-7553-4848</link> <br>
-GitHub: <link>https://github.com/trungtndev/</link>
+**Email:** <link>trunglh113@gmail.com </link><br>
+**ORCID:** <link>https://orcid.org/0009-0004-7553-4848</link> <br>
+**GitHub:** <link>https://github.com/trungtndev/</link>
 
 
