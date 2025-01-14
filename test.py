@@ -8,7 +8,6 @@ import zipfile
 
 seed_everything(7)
 
-
 def cal_distance(word1, word2):
     m = len(word1)
     n = len(word2)
@@ -75,8 +74,6 @@ def main(version: str, test_year: str):
                 if caption_string == pred_string:
                     exprate[0] += 1
                 else:
-                    # print(caption_string)
-                    # print(pred_string)
                     error_num = cal_distance(pred_parts, caption_parts)
                     if error_num <= 3:
                         exprate[error_num] += 1
