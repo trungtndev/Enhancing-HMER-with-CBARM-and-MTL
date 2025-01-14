@@ -35,7 +35,7 @@ The CROHME dataset can be downloaded [CoMER/blob/master/data.zip](https://github
 
 ### Clone this repository
 ```
-https://github.com/trungtndev/HMER-MTL
+git clone https://github.com/trungtndev/HMER-MTL
 ```
 
 ### Create Conda Enviroment and Install Requirement
@@ -74,11 +74,13 @@ python test.py 0 2016 # 2014, 2016, 2019
 
 
 ## References
-- [CoMER](https://github.com/Green-Wood/CoMER) | [arXiv](https://arxiv.org/abs/2207.04410)
-- [BTTR](https://github.com/Green-Wood/BTTR) | [arXiv](https://arxiv.org/abs/2105.02412)
-- [PosFormer](https://github.com/SJTU-DeepVisionLab/PosFormer) | [arXiv](https://arxiv.org/abs/2407.07764)
-- [ICAL](https://github.com/qingzhenduyu/ICAL) | [arXiv](https://arxiv.org/abs/2405.09032)
+Zhao, W., & Gao, L. (2022, October). Comer: Modeling coverage for transformer-based handwritten mathematical expression recognition. In European conference on computer vision (pp. 392-408). Cham: Springer Nature Switzerland.
 
+Zhao, W., Gao, L., Yan, Z., Peng, S., Du, L., & Zhang, Z. (2021). Handwritten mathematical expression recognition with bidirectionally trained transformer. In Document analysis and recognition–ICDAR 2021: 16th international conference, Lausanne, Switzerland, September 5–10, 2021, proceedings, part II 16 (pp. 570-584). Springer International Publishing.
+
+Guan, T., Lin, C., Shen, W., & Yang, X. (2025). PosFormer: recognizing complex handwritten mathematical expression with position forest transformer. In European Conference on Computer Vision (pp. 130-147). Springer, Cham.
+
+Zhu, J., Gao, L., & Zhao, W. (2024, August). ICAL: Implicit Character-Aided Learning for Enhanced Handwritten Mathematical Expression Recognition. In International Conference on Document Analysis and Recognition (pp. 21-37). Cham: Springer Nature Switzerland.
 ## Citation
 If you use this code or part of it, please cite the following papers:
 ```
