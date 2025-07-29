@@ -42,8 +42,11 @@ git clone https://github.com/trungtndev/HMER-MTL
 ```bash
 cd HMER-MTL
 # install project   
-conda create -y -n HMER-MTL python=3.7
+conda create -y -n HMER-MTL python=3.10
 conda activate HMER-MTL
+pip install -r ./requirements.txt
+pip install torch==2.4.0 torchvision==0.19.0 pillow==10.3.0 pytorch-lightning==1.4.9 torchmetrics==0.6.0
+
 conda install pytorch=1.8.1 torchvision=0.2.2 cudatoolkit=11.1 pillow=8.4.0 -c pytorch -c nvidia
 # training dependency
 conda install pytorch-lightning=1.4.9 torchmetrics=0.6.0 -c conda-forge
