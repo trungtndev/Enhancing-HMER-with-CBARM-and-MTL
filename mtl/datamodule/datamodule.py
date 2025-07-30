@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 from zipfile import ZipFile
-
+from tqdm import tqdm
 import numpy as np
 import pytorch_lightning as pl
 import torch
@@ -13,7 +13,8 @@ from torch.utils.data.dataloader import DataLoader
 
 from .vocab import vocab
 
-Data = List[Tuple[str, Image.Image, List[str]]]
+# Data = List[Tuple[str, Image.Image, List[str]]]
+Data = List[Tuple[str, Tuple[int, int], List[str]]]
 
 MAX_SIZE = 32e4  # change here accroading to your GPU memory
 
@@ -33,12 +34,12 @@ def data_iterator(
     fname_total = []
     biggest_image_size = 0
 
-    data.sort(key=lambda x: x[1].size[0] * x[1].size[1])
+    data.sort(key=lambda x: x[1][0] * x[1][1])
 
     i = 0
-    for fname, fea, lab in data:
-        size = fea.size[0] * fea.size[1]
-        fea = np.array(fea)
+    for fname, imsize, lab in data:
+        size = imsize[0] * imsize[1]
+        # fea = np.array(fea)
         if size > biggest_image_size:
             biggest_image_size = size
         batch_image_size = biggest_image_size * (i + 1)
@@ -46,7 +47,7 @@ def data_iterator(
             print("sentence", i, "length bigger than", maxlen, "ignore")
         elif size > maxImagesize:
             print(
-                f"image: {fname} size: {fea.shape[0]} x {fea.shape[1]} =  bigger than {maxImagesize}, ignore"
+                f"image: {fname} size: {imsize[0]} x {imsize[1]} =  bigger than {maxImagesize}, ignore"
             )
         else:
             if batch_image_size > batch_Imagesize or i == batch_size:  # a batch is full
@@ -59,12 +60,12 @@ def data_iterator(
                 feature_batch = []
                 label_batch = []
                 fname_batch.append(fname)
-                feature_batch.append(fea)
+                # feature_batch.append(fea)
                 label_batch.append(lab)
                 i += 1
             else:
                 fname_batch.append(fname)
-                feature_batch.append(fea)
+                # feature_batch.append(fea)
                 label_batch.append(lab)
                 i += 1
 
@@ -72,11 +73,11 @@ def data_iterator(
     fname_total.append(fname_batch)
     feature_total.append(feature_batch)
     label_total.append(label_batch)
-    print("total ", len(feature_total), "batch data loaded")
+    print("total ", len(fname_total), "batch data loaded")
     return list(zip(fname_total, feature_total, label_total))
 
 
-def extract_data(archive: ZipFile, dir_name: str) -> Data:
+def extract_data(archive: str, dir_name: str) -> Data:
     """Extract all data need for a dataset from zip archive
 
     Args:
@@ -86,17 +87,22 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
     Returns:
         Data: list of tuple of image and formula
     """
-    with archive.open(f"data/{dir_name}/caption.txt", "r") as f:
+    # with archive.open(f"data/{dir_name}/caption.txt", "r") as f:
+    with open(f"{archive}/{dir_name}/caption.txt", "rb") as f:
         captions = f.readlines()
     data = []
-    for line in captions:
+    for line in tqdm(captions):
         tmp = line.decode().strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
-        with archive.open(f"data/{dir_name}/img/{img_name}.bmp", "r") as f:
-            # move image to memory immediately, avoid lazy loading, which will lead to None pointer error in loading
-            img = Image.open(f).copy()
-        data.append((img_name, img, formula))
+        # with archive.open(f"data/{dir_name}/raw/{img_name}.bmp", "r") as f:
+        #     raw = Image.open(f).copy()
+
+        img_path = f"{archive}/{dir_name}/img/{img_name}.bmp"
+        img = Image.open(img_path).copy()  # convert to grayscale
+
+        data.append((img_path, img.size, formula))
+        del img  # free memory
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
 
@@ -146,7 +152,7 @@ def collate_fn(batch):
     return Batch(fnames, x, x_mask, seqs_y)
 
 
-def build_dataset(archive, folder: str, batch_size: int):
+def build_dataset(archive: str, folder: str, batch_size: int):
     data = extract_data(archive, folder)
     return data_iterator(data, batch_size)
 
@@ -173,21 +179,21 @@ class CROHMEDatamodule(pl.LightningDataModule):
         print(f"Load data from: {self.zipfile_path}")
 
     def setup(self, stage: Optional[str] = None) -> None:
-        with ZipFile(self.zipfile_path) as archive:
+        # with ZipFile(self.zipfile_path) as archive:
             if stage == "fit" or stage is None:
                 self.train_dataset = CROHMEDataset(
-                    build_dataset(archive, "train", self.train_batch_size),
+                    build_dataset(self.zipfile_path, "train", self.train_batch_size),
                     True,
                     self.scale_aug,
                 )
                 self.val_dataset = CROHMEDataset(
-                    build_dataset(archive, self.test_year, self.eval_batch_size),
+                    build_dataset(self.zipfile_path, self.test_year, self.eval_batch_size),
                     False,
                     self.scale_aug,
                 )
             if stage == "test" or stage is None:
                 self.test_dataset = CROHMEDataset(
-                    build_dataset(archive, self.test_year, self.eval_batch_size),
+                    build_dataset(self.zipfile_path, self.test_year, self.eval_batch_size),
                     False,
                     self.scale_aug,
                 )

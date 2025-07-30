@@ -42,7 +42,7 @@ def main(version: str, test_year: str):
 
     dm = CROHMEDatamodule(test_year=test_year, eval_batch_size=4)
 
-    model = LitMTL.load_from_checkpoint(ckp_path)
+    model = LitMTL.load_from_checkpoint(ckp_path, lambda_1=1.0, lambda_2=1.0)
 
     trainer.test(model, datamodule=dm)
     caption = {}
