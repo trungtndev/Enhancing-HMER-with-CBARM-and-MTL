@@ -86,14 +86,14 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
     Returns:
         Data: list of tuple of image and formula
     """
-    with archive.open(f"data/{dir_name}/caption.txt", "r") as f:
+    with archive.open(f"data2/{dir_name}/caption.txt", "r") as f:
         captions = f.readlines()
     data = []
     for line in captions:
         tmp = line.decode().strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
-        with archive.open(f"data/{dir_name}/img/{img_name}.bmp", "r") as f:
+        with archive.open(f"data2/{dir_name}/img/{img_name}.png", "r") as f:
             # move image to memory immediately, avoid lazy loading, which will lead to None pointer error in loading
             img = Image.open(f).copy()
         data.append((img_name, img, formula))
