@@ -1,6 +1,6 @@
 import zipfile
 from typing import List
-
+import time
 import pytorch_lightning as pl
 import torch.optim as optim
 from torch import FloatTensor, LongTensor
@@ -117,11 +117,19 @@ class LitMTL(pl.LightningModule):
         )
 
     def test_step(self, batch: Batch, _):
+        start_time = time.time()
         hyps = self.approximate_joint_search(batch.imgs, batch.mask)
+        inference_time = time.time() - start_time
         self.exprate_recorder([h.seq for h in hyps], batch.indices)
-        return batch.img_bases, [vocab.indices2label(h.seq) for h in hyps]
+        return batch.img_bases, [vocab.indices2label(h.seq) for h in hyps], inference_time
 
     def test_epoch_end(self, test_outputs) -> None:
+        time_pack = test_outputs[2]
+        total_time = sum(time_pack)
+        n_samples = len(time_pack)
+        print(f"Total inference time: {total_time:.2f} seconds.")
+        print(f"Inference time: {total_time / n_samples:.2f} seconds.")
+
         exprate = self.exprate_recorder.compute()
         print(f"Validation ExpRate: {exprate}")
 
