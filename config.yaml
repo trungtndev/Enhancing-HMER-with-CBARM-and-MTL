@@ -11,16 +11,15 @@ trainer:
         monitor: val_ExpRate
         mode: max
         filename: '{epoch}-{step}-{val_ExpRate:.4f}'
-  # gpus: 1
   gpus: 1 #, 1, 2, 3
   accelerator: ddp
   check_val_every_n_epoch: 4
-  max_epochs: 300
+  max_epochs: 200
   deterministic: true
 
 wandb:
-  name: "..."
-  project: "mtl"
+  name: "test_hmer"
+  project: "comer-origin"
   log_model: "all"
 
 
@@ -47,11 +46,11 @@ model:
   temperature: 1.0
   # training
   learning_rate: 0.08
-  patience: 20
+  patience: 4
 data:
-  zipfile_path: data
-  test_year: "2014"
-  train_batch_size: 2
-  eval_batch_size: 2
-  num_workers: 5
+  zipfile_path: /home/trung/Downloads/archive/HMER100K
+  test_year: "val"
+  train_batch_size: 1
+  eval_batch_size: 1
+  num_workers: 4
   scale_aug: true

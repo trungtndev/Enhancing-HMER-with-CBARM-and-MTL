@@ -71,6 +71,9 @@ def train(config):
     #     monitor=None,
     # )
     trainer = pl.Trainer(
+        val_check_interval=1.0,
+        limit_val_batches=0.1,
+
         gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,

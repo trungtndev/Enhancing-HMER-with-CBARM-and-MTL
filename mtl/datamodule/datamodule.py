@@ -35,9 +35,9 @@ def data_iterator(
     biggest_image_size = 0
 
     data.sort(key=lambda x: x[1][0] * x[1][1])
-
+    print("data_iterator...")
     i = 0
-    for fname, imsize, lab in data:
+    for fname, imsize, lab in tqdm(data):
         size = imsize[0] * imsize[1]
         # fea = np.array(fea)
         if size > biggest_image_size:
@@ -95,10 +95,10 @@ def extract_data(archive: str, dir_name: str) -> Data:
         tmp = line.decode().strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
-        # with archive.open(f"data/{dir_name}/raw/{img_name}.bmp", "r") as f:
-        #     raw = Image.open(f).copy()
+        # with archive.open(f"data/{dir_name}/img/{img_name}.bmp", "r") as f:
+        #     img = Image.open(f).copy()
 
-        img_path = f"{archive}/{dir_name}/img/{img_name}.bmp"
+        img_path = f"{archive}/{dir_name}/img/{img_name}.png"
         img = Image.open(img_path).copy()  # convert to grayscale
 
         data.append((img_path, img.size, formula))
