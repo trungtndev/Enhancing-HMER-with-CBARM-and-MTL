@@ -124,18 +124,20 @@ class LitMTL(pl.LightningModule):
         return batch.img_bases, [vocab.indices2label(h.seq) for h in hyps], inference_time
 
     def test_epoch_end(self, test_outputs) -> None:
-        time_pack = test_outputs[2]
+        time_pack = [output[2] for output in test_outputs]
         total_time = sum(time_pack)
         n_samples = len(time_pack)
+        latency = total_time / n_samples
         print(f"Total inference time: {total_time:.5f} seconds.")
-        print(f"Inference time: {total_time / n_samples:.5f} seconds.")
+        print(f"Inference time: {latency:.5f} seconds.")
+        print(f"FPS: { 1 / latency :.2f} samples/second.")
 
         exprate = self.exprate_recorder.compute()
         print(f"Validation ExpRate: {exprate}")
 
         with zipfile.ZipFile("result.zip", "w") as zip_f:
             for img_bases, preds in test_outputs:
-                for img_base, pred in zip(img_bases, preds):
+                for img_base, pred, _ in zip(img_bases, preds):
                     content = f"%{img_base}\n${pred}$".encode()
                     with zip_f.open(f"{img_base}.txt", "w") as f:
                         f.write(content)
