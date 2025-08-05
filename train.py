@@ -72,7 +72,7 @@ def train(config):
     # )
     trainer = pl.Trainer(
         val_check_interval=1.0,
-        limit_val_batches=0.1,
+        limit_val_batches=0.2,
 
         gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
