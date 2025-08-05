@@ -127,8 +127,8 @@ class LitMTL(pl.LightningModule):
         time_pack = test_outputs[2]
         total_time = sum(time_pack)
         n_samples = len(time_pack)
-        print(f"Total inference time: {total_time:.2f} seconds.")
-        print(f"Inference time: {total_time / n_samples:.2f} seconds.")
+        print(f"Total inference time: {total_time:.5f} seconds.")
+        print(f"Inference time: {total_time / n_samples:.5f} seconds.")
 
         exprate = self.exprate_recorder.compute()
         print(f"Validation ExpRate: {exprate}")
