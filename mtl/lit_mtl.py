@@ -136,7 +136,7 @@ class LitMTL(pl.LightningModule):
         print(f"Validation ExpRate: {exprate}")
 
         with zipfile.ZipFile("result.zip", "w") as zip_f:
-            for img_bases, preds in test_outputs:
+            for img_bases, preds, _ in test_outputs:
                 for img_base, pred, _ in zip(img_bases, preds):
                     content = f"%{img_base}\n${pred}$".encode()
                     with zip_f.open(f"{img_base}.txt", "w") as f:
