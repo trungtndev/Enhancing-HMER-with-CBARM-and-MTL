@@ -1,5 +1,8 @@
 import os
+import sys
 
+# ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+# sys.path.insert(0, ROOT_DIR)
 import typer
 from mtl.datamodule import CROHMEDatamodule
 from mtl.lit_mtl import LitMTL
@@ -10,15 +13,15 @@ seed_everything(7)
 
 def main(version: str, test_year: str):
     # generate output latex in result.zip
-    ckp_folder = os.path.join("lightning_logs", f"version_{version}", "checkpoints")
-    fnames = os.listdir(ckp_folder)
-    assert len(fnames) == 1
-    ckp_path = os.path.join(ckp_folder, fnames[0])
-    print(f"Test with fname: {fnames[0]}")
+    # ckp_folder = os.path.join("lightning_logs", f"version_{version}", "checkpoints")
+    # fnames = os.listdir(ckp_folder)
+    # assert len(fnames) == 1
+    ckp_path = "lightning_logs/version_0/checkpoints/epoch=91-step=69091-val_ExpRate=0.6355.ckpt"
+    # print(f"Test with fname: {fnames[0]}")
 
     trainer = Trainer(logger=False, gpus=1)
 
-    dm = CROHMEDatamodule(test_year=test_year, eval_batch_size=4)
+    dm = CROHMEDatamodule(test_year=test_year, eval_batch_size=1)
 
     model = LitMTL.load_from_checkpoint(ckp_path, lambda_1=1.0, lambda_2=1.0)
 
