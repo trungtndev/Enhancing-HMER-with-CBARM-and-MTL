@@ -66,6 +66,8 @@ def train(config):
 
     trainer = pl.Trainer(
         num_sanity_val_steps=0,
+        val_check_interval=1.0,
+
         gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
