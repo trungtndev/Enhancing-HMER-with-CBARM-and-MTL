@@ -7,7 +7,7 @@ import numpy as np
 import pytorch_lightning as pl
 import torch
 from comer.datamodule.dataset import CROHMEDataset
-from PIL import Image
+from PIL import Image, ImageOps
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
 
@@ -86,16 +86,17 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
     Returns:
         Data: list of tuple of image and formula
     """
-    with archive.open(f"data/{dir_name}/caption.txt", "r") as f:
+    with archive.open(f"crohme2023/{dir_name}/caption.txt", "r") as f:
         captions = f.readlines()
     data = []
     for line in captions:
         tmp = line.decode().strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
-        with archive.open(f"data/{dir_name}/img/{img_name}.bmp", "r") as f:
+        with archive.open(f"crohme2023/{dir_name}/img/{img_name}.bmp", "r") as f:
             # move image to memory immediately, avoid lazy loading, which will lead to None pointer error in loading
             img = Image.open(f).copy()
+            img = ImageOps.invert(img)
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
@@ -154,7 +155,7 @@ def build_dataset(archive, folder: str, batch_size: int):
 class CROHMEDatamodule(pl.LightningDataModule):
     def __init__(
         self,
-        zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data.zip",
+        zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../crohme2023.zip",
         test_year: str = "2014",
         train_batch_size: int = 8,
         eval_batch_size: int = 4,
