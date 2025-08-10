@@ -93,7 +93,7 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
         tmp = line.decode().strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
-        with archive.open(f"crohme2023/{dir_name}/img/{img_name}.bmp", "r") as f:
+        with archive.open(f"crohme2023/{dir_name}/img/{img_name}.png", "r") as f:
             # move image to memory immediately, avoid lazy loading, which will lead to None pointer error in loading
             img = Image.open(f).copy()
             img = ImageOps.invert(img)
