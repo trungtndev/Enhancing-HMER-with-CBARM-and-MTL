@@ -1,8 +1,8 @@
 import os
 
 import typer
-from comer.datamodule import CROHMEDatamodule
-from comer.lit_comer import LitCoMER
+from mtl.datamodule import CROHMEDatamodule
+from mtl.lit_mtl import LitMTL
 from pytorch_lightning import Trainer, seed_everything
 import zipfile
 
@@ -46,46 +46,9 @@ def main(version: str, test_year: str):
 
     dm = CROHMEDatamodule(test_year=test_year, eval_batch_size=4, num_workers=16)
 
-    model = LitCoMER.load_from_checkpoint(ckp_path)
+    model = LitMTL.load_from_checkpoint(ckp_path, lambda_1=1.0, lambda_2=1.0)
 
     trainer.test(model, datamodule=dm)
-    caption = {}
-    with zipfile.ZipFile("data.zip") as archive:
-        with archive.open(f"data/{test_year}/caption.txt", "r") as f:
-            caption_lines = [line.decode('utf-8').strip() for line in f.readlines()]
-            for caption_line in caption_lines:
-                caption_parts = caption_line.split()
-                caption_file_name = caption_parts[0]
-                caption_string = ' '.join(caption_parts[1:])
-                caption[caption_file_name] = caption_string
-
-    with zipfile.ZipFile("result.zip") as archive:
-        exprate = [0, 0, 0, 0]
-        file_list = archive.namelist()
-        txt_files = [file for file in file_list if file.endswith('.txt')]
-        for txt_file in txt_files:
-            file_name = txt_file.rstrip('.txt')
-            with archive.open(txt_file) as f:
-                lines = f.readlines()
-                pred_string = lines[1].decode('utf-8').strip()[1:-1]
-                if file_name in caption:
-                    caption_string = caption[file_name]
-                else:
-                    print(file_name, "not found in caption file")
-                    continue
-                caption_parts = caption_string.strip().split()
-                pred_parts = pred_string.strip().split()
-                if caption_string == pred_string:
-                    exprate[0] += 1
-                else:
-                    error_num = cal_distance(pred_parts, caption_parts)
-                    if error_num <= 3:
-                        exprate[error_num] += 1
-        tot = len(txt_files)
-        exprate_final = []
-        for i in range(1, 5):
-            exprate_final.append(100 * sum(exprate[:i]) / tot)
-        print(test_year, "exprate", exprate_final)
 
 if __name__ == "__main__":
     typer.run(main)

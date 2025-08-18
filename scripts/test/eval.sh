@@ -25,7 +25,7 @@ unzip -q result.zip -d test_temp/result
 tex2symlg test_temp/result test_temp/pred_symlg
 
 # evaluate two symlg folder
-evaluate test_temp/pred_symlg data/$test_year/symLg >/dev/null 2>&1
+evaluate test_temp/pred_symlg crohme2023/$test_year/symLg >/dev/null 2>&1
 
 # extract evaluation result and save to target folder
 python scripts/test/extract_exprate.py $error_tol >&1 | tee $dir/$test_year.txt
