@@ -1,4 +1,4 @@
-# HMER-MTL: Towards efficient recognition of handwritten mathematical expressions with multi-task learning.
+# Enhancing Handwritten Mathematical Expression Recognition with Convolutional Block Attention Refinement Module and Multi-Task Learning
 
 > Please press ⭐ button and/or cite papers if you feel helpful.
 
